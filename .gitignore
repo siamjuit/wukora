@@ -36,6 +36,8 @@ bower_components
 psd
 thumb
 sketch
+server/src/main/resources/application.properties
+
 
 # Flutter/Dart/Pub related
 **/doc/api/
