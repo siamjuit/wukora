@@ -1,5 +1,6 @@
 package com.server.wukora.backend.service.user;
 
+import com.server.wukora.backend.dto.user.UserDto;
 import com.server.wukora.backend.exception.AlreadyExistsException;
 import com.server.wukora.backend.exception.ResourceNotFoundException;
 import com.server.wukora.backend.model.user.User;
@@ -8,6 +9,7 @@ import com.server.wukora.backend.request.SignUpRequest;
 import com.server.wukora.backend.request.UpdateUserRequest;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,7 @@ public class UserService implements IUserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ModelMapper modelMapper;
 
     @Override
     public User getUserById(ObjectId id) {
@@ -57,5 +60,10 @@ public class UserService implements IUserService {
         userRepository.findById(id).ifPresentOrElse(userRepository :: delete, () -> {
             throw new ResourceNotFoundException("User not found");
         });
+    }
+
+    @Override
+    public UserDto convertToDto(User user) {
+        return modelMapper.map(user, UserDto.class);
     }
 }

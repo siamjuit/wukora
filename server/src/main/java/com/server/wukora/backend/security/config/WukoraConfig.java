@@ -5,6 +5,7 @@ import com.server.wukora.backend.security.jwt.AuthTokenFilter;
 import com.server.wukora.backend.security.jwt.JwtAuthEntryPoint;
 import com.server.wukora.backend.security.user.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,6 +35,10 @@ public class WukoraConfig {
 
     private static final List<String> SECURED_URLS = List.of();
 
+    @Bean
+    public ModelMapper modelMapper(){
+        return new ModelMapper();
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder(){

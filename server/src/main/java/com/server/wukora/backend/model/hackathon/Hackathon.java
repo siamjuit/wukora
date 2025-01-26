@@ -28,6 +28,9 @@ public class Hackathon {
     @NonNull
     private LocalDateTime hackathonDate;
 
+    @DBRef
+    private HackathonTheme theme;
+
     @NonNull
     private LocalDateTime lastDateToRegister;
 
