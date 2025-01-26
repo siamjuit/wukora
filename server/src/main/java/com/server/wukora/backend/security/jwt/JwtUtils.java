@@ -27,7 +27,6 @@ public class JwtUtils {
     @Value("${auth.token.expirationInMils}")
     private int expirationTime;
 
-
     public String generateToken(Authentication authentication){
         UserDetailsImpl userDetails = (UserDetailsImpl)  authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities()
