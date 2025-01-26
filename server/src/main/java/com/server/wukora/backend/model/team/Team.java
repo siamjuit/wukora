@@ -21,20 +21,14 @@ public class Team {
 
     @Id
     private ObjectId id;
-
     @NonNull
     private String name;
-
     private String description;
-
     @DBRef
     Set<Skill> requiredSkills = new HashSet<>();
-
     private int maxMembers;
-
     @DBRef
     private Set<User> teamMembers = new HashSet<>();
-
     @DBRef
     private Set<Hackathon> hackathonsApplied = new HashSet<>();
 
