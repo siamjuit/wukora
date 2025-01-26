@@ -2,7 +2,6 @@ package com.server.wukora.backend.dto.user;
 
 import com.server.wukora.backend.dto.skill.SkillDto;
 import com.server.wukora.backend.dto.team.TeamDto;
-import com.server.wukora.backend.model.skill.Skill;
 import lombok.Data;
 
 import java.util.HashSet;
