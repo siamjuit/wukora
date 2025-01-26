@@ -21,10 +21,10 @@ import java.util.function.Function;
 @Component
 public class JwtUtils {
 
-    @Value("${auth.token.jwtSecret}")
+    @Value("${user.token.jwtSecret}")
     private String secretKey;
 
-    @Value("${auth.token.expirationInMils}")
+    @Value("${user.token.expirationInMils}")
     private int expirationTime;
 
     public String generateToken(Authentication authentication){
