@@ -12,4 +12,5 @@ public interface IUserService {
     User updateUser(UpdateUserRequest request , ObjectId id);
     void deleteUser( ObjectId id );
     UserDto convertToDto(User user);
+    UserDto login(String email);
 }

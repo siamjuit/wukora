@@ -2,6 +2,7 @@ package com.server.wukora.backend.controller.auth;
 
 
 import com.server.wukora.backend.dto.token.RefreshTokenDto;
+import com.server.wukora.backend.dto.user.UserDto;
 import com.server.wukora.backend.exception.AlreadyExistsException;
 import com.server.wukora.backend.exception.ResourceNotFoundException;
 import com.server.wukora.backend.model.token.RefreshToken;
@@ -56,9 +57,9 @@ public class AuthController {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         if (authentication.isAuthenticated()) {
             SecurityContextHolder.getContext().setAuthentication(authentication);
-
+            UserDto userDto = userService.login(request.getEmail());
             RefreshToken refreshToken = refreshTokenService.createRefreshToken(request.getEmail());
-            return ResponseEntity.ok(new ApiResponse("Success", new JwtResponse(jwtUtils.generateToken(request.getEmail(), authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList()), refreshToken.getToken())));
+            return ResponseEntity.ok(new ApiResponse("Success", userDto));
         } else {
             return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("Failure: " + "Session not found", null));
         }

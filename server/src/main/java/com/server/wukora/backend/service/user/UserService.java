@@ -45,6 +45,8 @@ public class UserService implements IUserService {
                 ).orElseThrow(() -> new AlreadyExistsException("User with email: " + request.getEmail() + " already exists, please try again!!!"));
     }
 
+
+
     @Override
     public User updateUser(UpdateUserRequest request, ObjectId id) {
         return userRepository.findById(id).map(existingUser -> {
@@ -65,5 +67,12 @@ public class UserService implements IUserService {
     @Override
     public UserDto convertToDto(User user) {
         return modelMapper.map(user, UserDto.class);
+    }
+
+    @Override
+    public UserDto login(String email) {
+        User user = Optional.of(userRepository.findByEmail(email))
+                .orElseThrow(() -> new ResourceNotFoundException("User with email " + email + " doest not exist") );
+        return convertToDto(user);
     }
 }
