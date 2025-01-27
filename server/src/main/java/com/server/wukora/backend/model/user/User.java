@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.index.Indexed;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,15 +30,15 @@ public class User {
     private String password;
     @NonNull
     private String name;
-    private List<String> roles;
+    private List<String> roles = new ArrayList<>(List.of("ROLE_USER"));
     @DBRef
     private Set<Skill> skills = new HashSet<>();
     @DBRef
     private Set<Team> appliedTeams = new HashSet<>();
-    private String gitHubUrl;
-    private String portfolioUrl;
-    private String bio;
+    private String gitHubUrl = "";
+    private String portfolioUrl = "";
+    private String bio = "";
     private boolean lookingForTeam = false;
-    private String profileUrl;
-    private String bannerUrl;
+    private String profileUrl = "";
+    private String bannerUrl = "";
 }
