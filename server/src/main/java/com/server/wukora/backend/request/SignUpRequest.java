@@ -1,14 +1,17 @@
 package com.server.wukora.backend.request;
 
 import com.server.wukora.backend.model.skill.Skill;
-import lombok.Data;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class SignUpRequest {
     private String name;
     private String email;

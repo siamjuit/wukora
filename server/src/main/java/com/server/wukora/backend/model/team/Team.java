@@ -3,9 +3,9 @@ package com.server.wukora.backend.model.team;
 import com.server.wukora.backend.model.hackathon.Hackathon;
 import com.server.wukora.backend.model.skill.Skill;
 import com.server.wukora.backend.model.user.User;
-import jakarta.persistence.Id;
 import lombok.*;
 import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -25,7 +25,7 @@ public class Team {
     private String name;
     private String description;
     @DBRef
-    Set<Skill> requiredSkills = new HashSet<>();
+    private Set<Skill> requiredSkills = new HashSet<>();
     private int maxMembers;
     @DBRef
     private Set<User> teamMembers = new HashSet<>();

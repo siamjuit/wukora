@@ -14,7 +14,7 @@ public class TeamDto {
 
     private String name;
     private String description;
-    Set<SkillDto> requiredSkills = new HashSet<>();
+    private Set<SkillDto> requiredSkills = new HashSet<>();
     private int maxMembers;
     private Set<UserDto> teamMembers = new HashSet<>();
     private Set<HackathonDto> hackathonsApplied = new HashSet<>();

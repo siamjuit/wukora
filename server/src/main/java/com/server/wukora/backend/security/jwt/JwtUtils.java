@@ -18,11 +18,9 @@ import java.util.function.Function;
 @Component
 public class JwtUtils {
 
-    @Value("${user.token.jwtSecret}")
-    private String secretKey;
+    private String secretKey = "36763979244226452948404D635166546A576D5A7134743777217A25432A462D";
 
-    @Value("${user.token.expirationInMils}")
-    private int expirationTime;
+    private int expirationTime = 360000000;
 
     public String generateToken(String username, List<String> roles){
         return Jwts.builder()

@@ -31,7 +31,7 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("${api/prefix}/auth")
+@RequestMapping("${api.prefix}/auth")
 public class AuthController {
 
     private final UserService userService;
@@ -44,7 +44,7 @@ public class AuthController {
         try {
             User user = userService.signUp(request);
             RefreshToken refreshToken = refreshTokenService.createRefreshToken(request.getEmail());
-            String jwtToken = jwtUtils.generateToken(request.getEmail(), request.getRoles());
+            String jwtToken = java.lang.String.valueOf(jwtUtils.generateToken(request.getEmail(), request.getRoles()));
             return ResponseEntity.ok(new ApiResponse("Success", new JwtResponse( jwtToken, refreshToken.getToken())));
         } catch (AlreadyExistsException e) {
             return ResponseEntity.status(CONFLICT).body(new ApiResponse("Failure: " + e.getMessage(), null));
@@ -74,7 +74,4 @@ public class AuthController {
                     return ResponseEntity.ok(new JwtResponse( accessToken, refreshToken.getToken() ));
                 }).orElseThrow(() -> new ResourceNotFoundException("Refresh Token is not in DB..!!"));
     }
-
-
-
 }
