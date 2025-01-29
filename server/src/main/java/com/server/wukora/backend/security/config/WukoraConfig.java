@@ -34,6 +34,11 @@ public class WukoraConfig {
 
     private static final List<String> SECURED_URLS = List.of();
 
+    // Allow OAuth2 endpoints to be public
+    private static final List<String> PUBLIC_URLS = List.of(
+            "/api/v1/auth/**",
+            "/api/v1/oauth2/**"
+    );
     @Bean
     public ModelMapper modelMapper(){
         return new ModelMapper();
@@ -54,6 +59,9 @@ public class WukoraConfig {
         return config.getAuthenticationManager();
     }
 
+
+
+
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider(){
         var authProvider = new DaoAuthenticationProvider();
@@ -67,9 +75,12 @@ public class WukoraConfig {
         http.csrf(AbstractHttpConfigurer :: disable)
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthEntryPoint))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests( auth -> auth.requestMatchers(SECURED_URLS.toArray(String[] :: new)).authenticated()
-                        .anyRequest().permitAll()
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(PUBLIC_URLS.toArray(String[]::new)).permitAll()
+                        .requestMatchers(SECURED_URLS.toArray(String[]::new)).authenticated()
+                        .anyRequest().authenticated()  // Secure all other endpoints
                 )
+                .oauth2Login(oauth2 -> oauth2.defaultSuccessUrl("/", true))
                 .authenticationProvider(daoAuthenticationProvider())
                 .addFilterBefore(authTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
