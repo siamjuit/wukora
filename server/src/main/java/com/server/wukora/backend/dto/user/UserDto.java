@@ -3,6 +3,7 @@ package com.server.wukora.backend.dto.user;
 import com.server.wukora.backend.dto.skill.SkillDto;
 import com.server.wukora.backend.dto.team.TeamDto;
 import lombok.Data;
+import org.bson.types.ObjectId;
 
 import java.util.HashSet;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.Set;
 @Data
 public class UserDto {
 
+    private ObjectId id;
     private String email;
     private String name;
     private List<String> roles;

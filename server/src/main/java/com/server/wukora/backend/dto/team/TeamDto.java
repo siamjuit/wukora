@@ -5,6 +5,7 @@ import com.server.wukora.backend.dto.hackathon.HackathonDto;
 import com.server.wukora.backend.dto.skill.SkillDto;
 import com.server.wukora.backend.dto.user.UserDto;
 import lombok.Data;
+import org.bson.types.ObjectId;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,6 +13,7 @@ import java.util.Set;
 @Data
 public class TeamDto {
 
+    private ObjectId id;
     private String name;
     private String description;
     private Set<SkillDto> requiredSkills = new HashSet<>();

@@ -2,6 +2,7 @@ package com.server.wukora.backend.dto.hackathon;
 
 import com.server.wukora.backend.dto.team.TeamDto;
 import lombok.Data;
+import org.bson.types.ObjectId;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.Set;
 @Data
 public class HackathonDto {
 
+    private ObjectId id;
     private String name;
     private String description;
     private LocalDateTime hackathonDate;
