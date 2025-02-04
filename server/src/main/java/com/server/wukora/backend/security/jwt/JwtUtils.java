@@ -1,15 +1,12 @@
 package com.server.wukora.backend.security.jwt;
 
 
-import com.server.wukora.backend.security.user.UserDetailsImpl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -21,25 +18,16 @@ import java.util.function.Function;
 @Component
 public class JwtUtils {
 
-    @Value("${auth.token.jwtSecret}")
-    private String secretKey;
+    private String secretKey = "36763979244226452948404D635166546A576D5A7134743777217A25432A462D";
 
-    @Value("${auth.token.expirationInMils}")
-    private int expirationTime;
+    private int expirationTime = 360000000;
 
-
-    public String generateToken(Authentication authentication){
-        UserDetailsImpl userDetails = (UserDetailsImpl)  authentication.getPrincipal();
-        List<String> roles = userDetails.getAuthorities()
-                .stream()
-                .map(GrantedAuthority::getAuthority)
-                .toList();
-
+    public String generateToken(String username, List<String> roles){
         return Jwts.builder()
                 .claims()
-                .add("id", userDetails.getId())
-                .add("username", userDetails.getEmail())
-                .subject(userDetails.getEmail())
+                .add("username", username)
+                .add("roles", roles)
+                .subject(username)
                 .issuedAt(new Date())
                 .expiration(new Date((new Date()).getTime() + expirationTime))
                 .and()

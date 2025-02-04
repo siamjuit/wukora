@@ -3,12 +3,14 @@ package com.server.wukora.backend.security.config;
 
 import com.server.wukora.backend.security.jwt.AuthTokenFilter;
 import com.server.wukora.backend.security.jwt.JwtAuthEntryPoint;
+import com.server.wukora.backend.security.user.OAuth2ServiceImpl;
+import com.server.wukora.backend.security.user.OAuth2UserImpl;
 import com.server.wukora.backend.security.user.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -31,9 +33,19 @@ public class WukoraConfig {
 
     private final UserDetailsServiceImpl userDetailsService;
     private final JwtAuthEntryPoint jwtAuthEntryPoint;
+    private final OAuth2ServiceImpl oAuth2Service;
 
     private static final List<String> SECURED_URLS = List.of();
 
+    // Allow OAuth2 endpoints to be public
+    private static final List<String> PUBLIC_URLS = List.of(
+            "/api/v1/auth/**",
+            "/api/v1/oauth2/**"
+    );
+    @Bean
+    public ModelMapper modelMapper(){
+        return new ModelMapper();
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -63,8 +75,19 @@ public class WukoraConfig {
         http.csrf(AbstractHttpConfigurer :: disable)
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthEntryPoint))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests( auth -> auth.requestMatchers(SECURED_URLS.toArray(String[] :: new)).authenticated()
-                        .anyRequest().permitAll()
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(PUBLIC_URLS.toArray(String[]::new)).permitAll()
+                        .requestMatchers(SECURED_URLS.toArray(String[]::new)).authenticated()
+                        .anyRequest().authenticated()  // Secure all other endpoints
+                )
+                .oauth2Login(oauth -> oauth
+                        .authorizationEndpoint(authEndpoint -> authEndpoint.baseUri("/oauth2/authorization"))
+                        .redirectionEndpoint(redirectEndpoint -> redirectEndpoint.baseUri("/login/oauth2/code/*"))
+                        .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2Service))
+                        .successHandler((request, response, authentication) -> {
+                            OAuth2UserImpl oauthUser = (OAuth2UserImpl) authentication.getPrincipal();
+                            response.sendRedirect("/dashboard");
+                        })
                 )
                 .authenticationProvider(daoAuthenticationProvider())
                 .addFilterBefore(authTokenFilter(), UsernamePasswordAuthenticationFilter.class);
