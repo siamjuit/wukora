@@ -75,4 +75,9 @@ public class UserService implements IUserService {
                 .orElseThrow(() -> new ResourceNotFoundException("User with email " + email + " doest not exist") );
         return convertToDto(user);
     }
+
+    @Override
+    public User findByEmail(String email) {
+        return Optional.of(userRepository.findByEmail(email)).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    }
 }

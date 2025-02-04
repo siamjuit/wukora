@@ -13,4 +13,5 @@ public interface IUserService {
     void deleteUser( ObjectId id );
     UserDto convertToDto(User user);
     UserDto login(String email);
+    User findByEmail(String email);
 }

@@ -39,7 +39,7 @@ public class RefreshTokenService {
     }
 
     public Optional<RefreshToken> findByToken(String token){
-        return refreshTokenRepository.findByToken(token);
+        return Optional.of(refreshTokenRepository.findByToken(token)).orElseThrow(() -> new ResourceNotFoundException(("User not found")));
     }
 
 

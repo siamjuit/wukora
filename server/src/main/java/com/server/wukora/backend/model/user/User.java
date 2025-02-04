@@ -8,11 +8,9 @@ import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Setter
 @Getter
@@ -26,11 +24,17 @@ public class User {
     @Indexed( unique = true )
     @NonNull
     private String email;
-    @NonNull
+
+    //Password can be null for oauth users
     private String password;
     @NonNull
     private String name;
     private List<String> roles = new ArrayList<>(List.of("ROLE_USER"));
+
+    // OAuth2 fields
+    private String provider;
+    private String providerId;
+
     @DBRef
     private Set<Skill> skills = new HashSet<>();
     @DBRef
@@ -41,4 +45,21 @@ public class User {
     private boolean lookingForTeam = false;
     private String profileUrl = "";
     private String bannerUrl = "";
+
+    public static User fromOAuth2User(OAuth2User oAuth2User, String provider) {
+        User user = new User();
+        user.setProvider(provider);
+        user.setProviderId(oAuth2User.getName());
+        user.setEmail(Objects.requireNonNull(oAuth2User.getAttribute("email")));
+        user.setName(Objects.requireNonNull(oAuth2User.getAttribute("name")));
+
+        if ("github".equalsIgnoreCase(provider)) {
+            user.setProfileUrl(oAuth2User.getAttribute("avatar_url"));
+            user.setGitHubUrl(oAuth2User.getAttribute("html_url"));
+        } else if ("google".equalsIgnoreCase(provider)) {
+            user.setProfileUrl(oAuth2User.getAttribute("picture"));
+        }
+
+        return user;
+    }
 }

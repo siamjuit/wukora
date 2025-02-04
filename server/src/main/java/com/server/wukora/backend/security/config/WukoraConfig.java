@@ -3,6 +3,8 @@ package com.server.wukora.backend.security.config;
 
 import com.server.wukora.backend.security.jwt.AuthTokenFilter;
 import com.server.wukora.backend.security.jwt.JwtAuthEntryPoint;
+import com.server.wukora.backend.security.user.OAuth2ServiceImpl;
+import com.server.wukora.backend.security.user.OAuth2UserImpl;
 import com.server.wukora.backend.security.user.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -31,6 +33,7 @@ public class WukoraConfig {
 
     private final UserDetailsServiceImpl userDetailsService;
     private final JwtAuthEntryPoint jwtAuthEntryPoint;
+    private final OAuth2ServiceImpl oAuth2Service;
 
     private static final List<String> SECURED_URLS = List.of();
 
@@ -59,9 +62,6 @@ public class WukoraConfig {
         return config.getAuthenticationManager();
     }
 
-
-
-
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider(){
         var authProvider = new DaoAuthenticationProvider();
@@ -80,7 +80,15 @@ public class WukoraConfig {
                         .requestMatchers(SECURED_URLS.toArray(String[]::new)).authenticated()
                         .anyRequest().authenticated()  // Secure all other endpoints
                 )
-                .oauth2Login(oauth2 -> oauth2.defaultSuccessUrl("/", true))
+                .oauth2Login(oauth -> oauth
+                        .authorizationEndpoint(authEndpoint -> authEndpoint.baseUri("/oauth2/authorization"))
+                        .redirectionEndpoint(redirectEndpoint -> redirectEndpoint.baseUri("/login/oauth2/code/*"))
+                        .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2Service))
+                        .successHandler((request, response, authentication) -> {
+                            OAuth2UserImpl oauthUser = (OAuth2UserImpl) authentication.getPrincipal();
+                            response.sendRedirect("/dashboard");
+                        })
+                )
                 .authenticationProvider(daoAuthenticationProvider())
                 .addFilterBefore(authTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
