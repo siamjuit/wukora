@@ -1,6 +1,15 @@
 import images from '@/constants/image'
 
-export const OnBoardingItems = [
+
+export type OnBoardingItemType = {
+    image: string;
+    title: string;
+    subtitle: string
+}
+
+
+
+export const OnBoardingItems: Array<OnBoardingItemType> = [
     {
         image: images.onboarding1,
         title: "Find Your Perfect\nHackathon Teammate",
