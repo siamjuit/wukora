@@ -1,7 +1,6 @@
 package com.server.wukora.backend.model.skill;
 
-
-import com.server.wukora.backend.model.team.Team;
+import com.server.wukora.backend.dto.team.TeamDto;
 import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -25,7 +24,8 @@ public class Skill {
     private String name;
 
     @DBRef
-    private Set<Team> teams = new HashSet<>();
+    private Set<TeamDto> teams = new HashSet<>();
 
+    private String icon;
 
 }

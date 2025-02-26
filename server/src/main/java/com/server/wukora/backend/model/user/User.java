@@ -8,10 +8,9 @@ import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Setter
 @Getter
@@ -22,35 +21,45 @@ public class User {
 
     @Id
     private ObjectId id;
-
     @Indexed( unique = true )
     @NonNull
     private String email;
 
-    @NonNull
+    //Password can be null for oauth users
     private String password;
-
     @NonNull
     private String name;
+    private List<String> roles = new ArrayList<>(List.of("ROLE_USER"));
 
-    private List<String> roles;
+    // OAuth2 fields
+    private String provider;
+    private String providerId;
 
     @DBRef
     private Set<Skill> skills = new HashSet<>();
-
     @DBRef
     private Set<Team> appliedTeams = new HashSet<>();
-
-    private String gitHubUrl;
-
-    private String portfolioUrl;
-
-    private String bio;
-
+    private String gitHubUrl = "";
+    private String portfolioUrl = "";
+    private String bio = "";
     private boolean lookingForTeam = false;
+    private String profileUrl = "";
+    private String bannerUrl = "";
 
-    private String profileUrl;
+    public static User fromOAuth2User(OAuth2User oAuth2User, String provider) {
+        User user = new User();
+        user.setProvider(provider);
+        user.setProviderId(oAuth2User.getName());
+        user.setEmail(Objects.requireNonNull(oAuth2User.getAttribute("email")));
+        user.setName(Objects.requireNonNull(oAuth2User.getAttribute("name")));
 
-    private String bannerUrl;
+        if ("github".equalsIgnoreCase(provider)) {
+            user.setProfileUrl(oAuth2User.getAttribute("avatar_url"));
+            user.setGitHubUrl(oAuth2User.getAttribute("html_url"));
+        } else if ("google".equalsIgnoreCase(provider)) {
+            user.setProfileUrl(oAuth2User.getAttribute("picture"));
+        }
 
+        return user;
+    }
 }
