@@ -45,7 +45,7 @@ public class AuthController {
         try {
             User user = userService.signUp(request);
             RefreshToken refreshToken = refreshTokenService.createRefreshToken(request.getEmail());
-            String jwtToken = java.lang.String.valueOf(jwtUtils.generateToken(request.getEmail(), request.getRoles()));
+            String jwtToken = jwtUtils.generateToken(request.getEmail(), request.getRoles());
             return ResponseEntity.ok(new ApiResponse("Success", new JwtResponse( jwtToken, refreshToken.getToken(), user)));
         } catch (AlreadyExistsException e) {
             return ResponseEntity.status(CONFLICT).body(new ApiResponse("Failure: " + e.getMessage(), null));

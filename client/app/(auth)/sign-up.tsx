@@ -1,10 +1,12 @@
-import { View, Text, TextInput, TouchableOpacity } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Feather } from '@expo/vector-icons'
 import Button from '@/components/Button'
 import SocialButtons from '@/components/SocialButtons'
 import icons from '@/constants/icon'
+import { useRouter } from 'expo-router'
+
 
 const SignUp = () => {
     
@@ -15,15 +17,16 @@ const SignUp = () => {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    
+    const router = useRouter();
 
   return (
-    <SafeAreaView className="flex-1 gap-5 bg-black justify-end items-center p-5" >
-      <Text className='text-white text-3xl font-cera-bold'>
+    <SafeAreaView className="flex-1 bg-black gap-3 justify-end items-center p-5" >
+      <Text className='text-white mb-5 text-3xl font-cera-bold'>
         Sign Up for Wukora
       </Text>
 
-      <View className=' flex flex-row gap-5 items-center justify-between' >
-  
+      <View className='flex flex-row gap-5 items-center justify-between' >
         <TextInput 
           className='h-12 flex-1 text-white border-b font-cera-medium border-[#545458]/65 w-full'
           placeholder="First Name"
@@ -40,7 +43,6 @@ const SignUp = () => {
           onChangeText={setLastName}
         />
        
-
       </View>
 
       <TextInput 
@@ -53,7 +55,7 @@ const SignUp = () => {
        
       <View className='w-full'>
           <TextInput
-            className="h-12 border-b font-cera-medium border-[#545458]/65 text-white pr-10"
+            className="h-12 border-b font-cera-medium  border-[#545458]/65 text-white pr-10"
             placeholder="Choose password"
             placeholderTextColor="#666"
             value={password}
@@ -65,39 +67,38 @@ const SignUp = () => {
           </TouchableOpacity>
       </View>
       
-      <View className='w-full'>
+      <View className='w-full mb-5'>
           <TextInput
-            className="h-12 border-b font-cera-medium border-[#545458]/65 text-white pr-10"
+            className="h-12 border-b font-cera-medium border-[#545458]/65 text-white"
             placeholder="Confirm password"
             placeholderTextColor="#666"
             value={confirmPassword}
             onChangeText={setConfirmPassword}
             secureTextEntry={!showConfirmPassword}
           />
-          <TouchableOpacity className="absolute right-0 top-3" onPress={() => setShowPassword(!showPassword)}>
+          <TouchableOpacity className="absolute right-0 top-3" onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
             <Feather name={showConfirmPassword ? "eye" : "eye-off"} size={20} color="#fff" />
           </TouchableOpacity>
       </View>
       
 
-
-
-
-
-      <TouchableOpacity>
-          <Text className="text-white/50 text-center font-cera-light underline">Forgot password?</Text>
-      </TouchableOpacity>
-        
       <Button 
         title="Sign Up" 
         color="#58cc02" 
         textColor="black" 
-        onPress={() => console.log("Sign Up Pressed")} 
+        onPress={() => router.push({
+            pathname: '/domains',
+            params: {
+                name: `${firstName + lastName}`,
+                email: email,
+                password: password,
+            }
+        })} 
       /> 
       
       <Text className="font-cera-bold text-lg text-white">OR</Text>
        
-      <View className='gap-4' > 
+      <View className='gap-3' > 
       <SocialButtons 
         icon={icons.Google}
         title="Continue with Google"

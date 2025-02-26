@@ -44,8 +44,8 @@ const OnboardingScreen = () =>  {
         ))}
       </ScrollView>
 
-      <View className="items-center justify-start">
-        <View className="flex-row mb-10">
+      <View className="items-center my-auto justify-center">
+        <View className="flex-row mb-5">
           {OnBoardingItems.map((_, index) => (
             <TouchableOpacity 
               key={index}

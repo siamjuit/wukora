@@ -26,4 +26,6 @@ public class Skill {
     @DBRef
     private Set<TeamDto> teams = new HashSet<>();
 
+    private String icon;
+
 }

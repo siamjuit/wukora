@@ -12,6 +12,6 @@ public class SkillDto {
 
     private ObjectId id;
     private String name;
-    private Set<TeamDto> teams = new HashSet<>();
-
+    // private Set<TeamDto> teams = new HashSet<>();
+    private String icon;
 }
